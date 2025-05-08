@@ -1,1 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .payment-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .payment-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .payment-header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .payment-tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .payment-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .payment-tab.active {
+            color: var(--primary);
+        }
+        
+        .payment-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .payment-tab i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .payment-content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .payment-method input {
+            margin-right: 15px;
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .payment-details {
+            flex: 1;
+        }
+        
+        .payment-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .payment-details p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .row {
+            display: flex;
+            margin: 0 -10px;
+        }
+        
+        .col {
+            flex: 1;
+            padding: 0 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .upi-apps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .upi-app {
+            flex: 1 0 calc(20% - 10px);
+            max-width: calc(20% - 10px);
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upi-app:hover {
+            border-color: var(--primary);
+        }
+        
+        .upi-app img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+        
+        .upi-app p {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .saved-cards {
+            margin-bottom: 20px;
+        }
+        
+        .saved-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .saved-card:hover {
+            border-color: var(--primary);
+        }
+        
+        .saved-card.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .card-logo {
+            width: 40px;
+            height: 25px;
+            margin-right: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .card-info {
+            flex: 1;
+        }
+        
+        .card-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .card-info p {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .payment-summary {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-top: 1px solid #e9ecef;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-tabs {
+                flex-direction: column;
+            }
+            
+            .payment-tab {
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .payment-tab.active:after {
+                width: 3px;
+                height: 100%;
+                left: 0;
+                top: 0;
+            }
+            
+            .row {
+                flex-direction: column;
+            }
+            
+            .col {
+                margin-bottom: 15px;
+            }
+            
+            .upi-app {
+                flex: 1 0 calc(33% - 10px);
+                max-width: calc(33% - 10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Complete Your Payment</h1>
+            <p>Secure and easy payment process with multiple options</p>
+        </div>
+        
+        <div class="payment-card">
+            <div class="payment-tabs">
+                <div class="payment-tab active" data-tab="card">
+                    <i class="far fa-credit-card"></i> Card
+                </div>
+                <div class="payment-tab" data-tab="upi">
+                    <i class="fas fa-mobile-alt"></i> UPI
+                </div>
+                <div class="payment-tab" data-tab="netbanking">
+                    <i class="fas fa-university"></i> Net Banking
+                </div>
+                <div class="payment-tab" data-tab="wallet">
+                    <i class="fas fa-wallet"></i> Wallets
+                </div>
+            </div>
+            
+            <div class="payment-content">
+                <!-- Card Payment Tab -->
+                <div class="tab-content active" id="card-tab">
+                    <div class="saved-cards">
+                        <div class="saved-card selected">
+                            <div class="card-logo">
+                                <img src="https://logo.clearbit.com/visa.com" alt="Visa">
+                            </div>
+                            <div class="card-info">
+                                <h3>Visa ending in 4242</h3>
+                                <p>Expires 04/25</p>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                        </div>
+                        
+                        <div class="saved-card">
+                            <div class="card-logo">
+                                <img src="https://logo.clearbit.com/mastercard.com" alt="Mastercard">
+                            </div>
+                            <div class="card-info">
+                                <h3>Mastercard ending in 5555</h3>
+                                <p>Expires 12/24</p>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" style="justify-content: center;">
+                            <i class="fas fa-plus-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                            <span>Add new card</span>
+                        </div>
+                    </div>
+                    
+                    <form id="card-form">
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="card-expiry">Expiry Date</label>
+                                    <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="card-cvv">CVV</label>
+                                    <input type="text" id="card-cvv" class="form-control" placeholder="123" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="payment-method selected">
+                                <input type="checkbox" id="save-card" checked>
+                                <div class="payment-icon">
+                                    <i class="fas fa-save"></i>
+                                </div>
+                                <div class="payment-details">
+                                    <h3>Save this card</h3>
+                                    <p>Save for faster payments next time</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn">Pay ₹2,499</button>
+                    </form>
+                </div>
+                
+                <!-- UPI Payment Tab -->
+                <div class="tab-content" id="upi-tab">
+                    <div class="payment-method selected">
+                        <input type="radio" name="upi-method" id="upi-id" checked>
+                        <div class="payment-icon">
+                            <i class="fas fa-at"></i>
+                        </div>
+                        <div class="payment-details">
+                            <h3>UPI ID</h3>
+                            <p>Pay using your UPI ID (yourname@upi)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="upi-method" id="upi-number">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="payment-details">
+                            <h3>Mobile Number</h3>
+                            <p>Pay using your registered mobile number</p>
+                        </div>
+                    </div>
+                    
+                    <form id="upi-form" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="upi-id-input">Enter UPI ID</label>
+                            <input type="text" id="upi-id-input" class="form-control" placeholder="yourname@upi" required>
+                        </div>
+                        
+                        <p style="text-align: center; margin: 15px 0; color: #6c757d;">OR</p>
+                        
+                        <div class="upi-apps">
+                            <div class="upi-app">
+                                <img src="https://logo.clearbit.com/phonepe.com" alt="PhonePe">
+                                <p>PhonePe</p>
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://logo.clearbit.com/googlepay.com" alt="Google Pay">
+                                <p>Google Pay</p>
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://logo.clearbit.com/paytm.com" alt="Paytm">
+                                <p>Paytm</p>
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://logo.clearbit.com/bhimupi.com" alt="BHIM">
+                                <p>BHIM</p>
+                            </div>
+                            <div class="upi-app">
+                                <img src="https://logo.clearbit.com/amazonpay.com" alt="Amazon Pay">
+                                <p>Amazon Pay</p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn" style="margin-top: 20px;">Pay via UPI</button>
+                    </form>
+                </div>
+                
+                <!-- Net Banking Tab -->
+                <div class="tab-content" id="netbanking-tab">
+                    <div class="payment-method selected">
+                        <input type="radio" name="bank" id="sbi" checked>
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/sbi.co.in" alt="SBI" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>State Bank of India</h3>
+                            <p>Net Banking</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="bank" id="hdfc">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/hdfcbank.com" alt="HDFC" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>HDFC Bank</h3>
+                            <p>Net Banking</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="bank" id="icici">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/icicibank.com" alt="ICICI" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>ICICI Bank</h3>
+                            <p>Net Banking</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="bank" id="axis">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/axisbank.com" alt="Axis" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>Axis Bank</h3>
+                            <p>Net Banking</p>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn" style="margin-top: 20px;">Continue to Bank</button>
+                </div>
+                
+                <!-- Wallet Tab -->
+                <div class="tab-content" id="wallet-tab">
+                    <div class="payment-method selected">
+                        <input type="radio" name="wallet" id="paytm" checked>
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/paytm.com" alt="Paytm" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>Paytm Wallet</h3>
+                            <p>Balance: ₹1,250.00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="wallet" id="amazonpay">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/amazonpay.com" alt="Amazon Pay" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>Amazon Pay</h3>
+                            <p>Balance: ₹500.00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="wallet" id="mobikwik">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/mobikwik.com" alt="MobiKwik" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>MobiKwik</h3>
+                            <p>Balance: ₹0.00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <input type="radio" name="wallet" id="freecharge">
+                        <div class="payment-icon">
+                            <img src="https://logo.clearbit.com/freecharge.in" alt="FreeCharge" style="width: 30px;">
+                        </div>
+                        <div class="payment-details">
+                            <h3>FreeCharge</h3>
+                            <p>Balance: ₹250.00</p>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn" style="margin-top: 20px;">Pay with Wallet</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="payment-summary">
+            <h3 style="margin-bottom: 20px;">Order Summary</h3>
+            <div class="summary-item">
+                <span>Premium Plan</span>
+                <span>₹2,499.00</span>
+            </div>
+            <div class="summary-item">
+                <span>Tax (18%)</span>
+                <span>₹449.82</span>
+            </div>
+            <div class="summary-item summary-total">
+                <span>Total Amount</span>
+                <span>₹2,948.82</span>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.payment-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.payment-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show the corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                // For radio/checkbox inputs, don't toggle if clicking directly on the input
+                if (event.target.tagName === 'INPUT') return;
+                
+                const input = this.querySelector('input');
+                if (input) {
+                    // For radio buttons
+                    if (input.type === 'radio') {
+                        // Remove selected class from all methods in this group
+                        const name = input.getAttribute('name');
+                        document.querySelectorAll(`.payment-method input[name="${name}"]`).forEach(inp => {
+                            inp.parentElement.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to this method
+                        input.checked = true;
+                        this.classList.add('selected');
+                    }
+                    // For checkboxes
+                    else if (input.type === 'checkbox') {
+                        input.checked = !input.checked;
+                        this.classList.toggle('selected', input.checked);
+                    }
+                }
+            });
+        });
+        
+        // Saved card selection
+        document.querySelectorAll('.saved-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.saved-card').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // Form submission
+        document.getElementById('card-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Card payment would be processed here with a payment gateway');
+            // In a real implementation, integrate with Stripe, Razorpay, etc.
+        });
+        
+        document.getElementById('upi-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const upiId = document.getElementById('upi-id-input').value;
+            alert(`UPI payment request would be sent to ${upiId}`);
+            // In a real implementation, use UPI deep linking or payment gateway
+        });
+    </script>
+</body>
+</html>
