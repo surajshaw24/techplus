@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPI Payment Request</title>
+    <title>TechPlus Academy - Payment Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #6c5ce7;
-            --secondary: #5649c9;
-            --success: #00b894;
-            --danger: #d63031;
-            --warning: #fdcb6e;
-            --light: #f8f9fa;
-            --dark: #2d3436;
+            --primary: #3f51b5;
+            --secondary: #303f9f;
+            --accent: #ff5722;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
         }
         
         * {
@@ -26,72 +26,102 @@
         body {
             background-color: #f5f7fa;
             color: var(--dark);
-            line-height: 1.6;
         }
         
-        .payment-container {
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
         }
         
-        .payment-header {
+        header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .payment-header h1 {
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 10px;
+            font-weight: bold;
         }
         
-        .payment-header p {
-            color: #6c757d;
-            font-size: 1rem;
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
         }
         
         .payment-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             margin-bottom: 30px;
         }
         
-        .payment-content {
+        .tabs {
+            display: flex;
+            background: var(--light);
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: white;
+        }
+        
+        .tab-content {
             padding: 30px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         .payment-method {
             display: flex;
             align-items: center;
             padding: 15px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #eee;
             border-radius: 10px;
             margin-bottom: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
         
         .payment-method:hover {
             border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.1);
+            box-shadow: 0 5px 15px rgba(63, 81, 181, 0.1);
         }
         
         .payment-method.selected {
             border-color: var(--primary);
-            background-color: rgba(108, 92, 231, 0.05);
-        }
-        
-        .payment-method input {
-            margin-right: 15px;
+            background: rgba(63, 81, 181, 0.05);
         }
         
         .payment-icon {
             width: 40px;
             height: 40px;
-            background-color: #f8f9fa;
+            background: var(--light);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -106,12 +136,11 @@
         }
         
         .payment-details h3 {
-            font-size: 1.1rem;
             margin-bottom: 5px;
         }
         
         .payment-details p {
-            color: #6c757d;
+            color: #666;
             font-size: 0.9rem;
         }
         
@@ -119,47 +148,68 @@
             margin-bottom: 20px;
         }
         
-        .form-group label {
+        label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #495057;
         }
         
-        .form-control {
+        input, select {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s;
         }
         
-        .form-control:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
         }
         
         .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: var(--primary);
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             text-align: center;
-            width: 100%;
         }
         
         .btn:hover {
-            background-color: var(--secondary);
+            background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+            box-shadow: 0 5px 15px rgba(63, 81, 181, 0.3);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background: #e64a19;
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px dashed #ddd;
+            border-radius: 10px;
+        }
+        
+        #qrcode {
+            margin: 0 auto;
+            padding: 10px;
+            background: white;
         }
         
         .upi-apps {
@@ -170,14 +220,13 @@
         }
         
         .upi-app {
-            flex: 1 0 calc(33% - 10px);
-            max-width: calc(33% - 10px);
-            border: 1px solid #e9ecef;
+            flex: 1 0 calc(25% - 10px);
+            border: 1px solid #eee;
             border-radius: 8px;
             padding: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
         
         .upi-app:hover {
@@ -193,351 +242,368 @@
         
         .upi-app p {
             font-size: 0.8rem;
-            color: #6c757d;
         }
         
-        .payment-summary {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
+        .payment-info {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
         }
         
-        .summary-item {
+        .info-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
         
-        .summary-total {
-            font-weight: 700;
-            font-size: 1.2rem;
-            border-top: 1px solid #e9ecef;
-            padding-top: 10px;
-            margin-top: 10px;
+        .info-item:last-child {
+            margin-bottom: 0;
         }
         
-        .verification-code {
+        .success-screen {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .verification-code input {
-            width: 40px;
-            height: 40px;
-            margin: 0 5px;
-            text-align: center;
-            font-size: 1.2rem;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-        }
-        
-        .verification-code input:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        
-        .countdown {
-            text-align: center;
-            color: var(--primary);
-            font-weight: 600;
-            margin: 10px 0;
-        }
-        
-        .success-message {
-            text-align: center;
-            padding: 20px;
-            color: var(--success);
-        }
-        
-        .success-message i {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            margin: 0 auto 20px;
+            font-size: 2rem;
         }
         
         @media (max-width: 768px) {
-            .payment-container {
-                margin: 20px auto;
+            .container {
+                padding: 15px;
             }
             
-            .payment-content {
+            .tab-content {
                 padding: 20px;
             }
             
             .upi-app {
-                flex: 1 0 calc(50% - 10px);
-                max-width: calc(50% - 10px);
+                flex: 1 0 calc(33% - 10px);
             }
         }
     </style>
 </head>
 <body>
-    <div class="payment-container">
-        <div class="payment-header">
-            <h1>UPI Payment Request</h1>
-            <p>We'll send a payment request to your UPI registered mobile number</p>
-        </div>
+    <div class="container">
+        <header>
+            <div class="logo">TP</div>
+            <h1>TechPlus Academy</h1>
+            <p>Secure Payment Portal</p>
+        </header>
         
         <div class="payment-card">
-            <div class="payment-content">
+            <div class="tabs">
+                <div class="tab active" data-tab="upi">UPI Payment</div>
+                <div class="tab" data-tab="qr">QR Code</div>
+                <div class="tab" data-tab="card">Card Payment</div>
+            </div>
+            
+            <div class="tab-content active" id="upi-tab">
                 <div class="payment-method selected">
-                    <input type="radio" name="upi-method" id="upi-number" checked>
+                    <input type="radio" name="upi-type" id="upi-id" checked>
                     <div class="payment-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <div class="payment-details">
-                        <h3>Mobile Number</h3>
-                        <p id="mobile-number-display">+91 ••••••••••</p>
-                        <button id="change-number-btn" style="background: none; border: none; color: var(--primary); padding: 0; font-size: 0.8rem; width: auto;">Change Number</button>
+                        <h3>Pay via UPI ID</h3>
+                        <p>Use any UPI app to pay to our ID</p>
                     </div>
                 </div>
                 
-                <div id="mobile-input-section" style="display: none;">
-                    <div class="form-group">
-                        <label for="mobile-number">Enter Mobile Number</label>
-                        <input type="tel" id="mobile-number" class="form-control" placeholder="Enter 10-digit mobile number" maxlength="10">
+                <div class="payment-method">
+                    <input type="radio" name="upi-type" id="upi-number">
+                    <div class="payment-icon">
+                        <i class="fas fa-phone"></i>
                     </div>
-                    <button id="confirm-number-btn" class="btn" style="margin-bottom: 20px;">Confirm Number</button>
-                </div>
-                
-                <div id="payment-request-section">
-                    <div class="form-group">
-                        <label for="amount">Amount (₹)</label>
-                        <input type="number" id="amount" class="form-control" placeholder="Enter amount" value="100" min="1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="description">Description (Optional)</label>
-                        <input type="text" id="description" class="form-control" placeholder="e.g., Payment for services">
-                    </div>
-                    
-                    <button id="send-request-btn" class="btn">
-                        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Send Payment Request
-                    </button>
-                    
-                    <div class="upi-apps">
-                        <div class="upi-app" data-app="phonepe">
-                            <img src="https://logo.clearbit.com/phonepe.com" alt="PhonePe">
-                            <p>PhonePe</p>
-                        </div>
-                        <div class="upi-app" data-app="gpay">
-                            <img src="https://logo.clearbit.com/googlepay.com" alt="Google Pay">
-                            <p>Google Pay</p>
-                        </div>
-                        <div class="upi-app" data-app="paytm">
-                            <img src="https://logo.clearbit.com/paytm.com" alt="Paytm">
-                            <p>Paytm</p>
-                        </div>
+                    <div class="payment-details">
+                        <h3>Pay via Mobile Number</h3>
+                        <p>Send payment to our registered number</p>
                     </div>
                 </div>
                 
-                <div id="verification-section" style="display: none;">
-                    <h3 style="text-align: center; margin-bottom: 20px;">Verify UPI Payment</h3>
-                    <p style="text-align: center; margin-bottom: 20px;">We've sent a 6-digit verification code to your mobile number ending with <strong>••••4312</strong></p>
-                    
-                    <div class="verification-code">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                        <input type="text" maxlength="1" pattern="[0-9]">
-                    </div>
-                    
-                    <div class="countdown" id="countdown">Resend code in 1:00</div>
-                    <button id="resend-code-btn" class="btn" style="background-color: var(--light); color: var(--dark); display: none;">Resend Verification Code</button>
-                    
-                    <button id="verify-payment-btn" class="btn" style="margin-top: 20px;">Verify Payment</button>
+                <div class="form-group">
+                    <label for="amount">Amount (₹)</label>
+                    <input type="number" id="amount" value="1000" min="1">
                 </div>
                 
-                <div id="success-section" style="display: none;">
-                    <div class="success-message">
-                        <i class="fas fa-check-circle"></i>
-                        <h3>Payment Successful!</h3>
-                        <p>₹<span id="success-amount">100</span> has been received from <span id="success-mobile">8651744312</span></p>
-                        <p>Transaction ID: <span id="transaction-id">865174312bob@ybl</span></p>
-                    </div>
-                    <button id="done-btn" class="btn" style="margin-top: 20px;">Done</button>
+                <div class="form-group">
+                    <label for="note">Payment Note (Optional)</label>
+                    <input type="text" id="note" placeholder="e.g., Course Fee Payment">
                 </div>
+                
+                <div class="payment-info">
+                    <div class="info-item">
+                        <span>UPI ID:</span>
+                        <strong>8651744312bob@ybl</strong>
+                    </div>
+                    <div class="info-item">
+                        <span>Mobile Number:</span>
+                        <strong>8651744312</strong>
+                    </div>
+                    <div class="info-item">
+                        <span>Recipient Name:</span>
+                        <strong>TechPlus Academy</strong>
+                    </div>
+                </div>
+                
+                <button class="btn" id="pay-via-upi">
+                    <i class="fas fa-paper-plane"></i> Open UPI App to Pay
+                </button>
+                
+                <div class="upi-apps">
+                    <div class="upi-app" data-app="gpay">
+                        <img src="https://logo.clearbit.com/googlepay.com" alt="Google Pay">
+                        <p>Google Pay</p>
+                    </div>
+                    <div class="upi-app" data-app="phonepe">
+                        <img src="https://logo.clearbit.com/phonepe.com" alt="PhonePe">
+                        <p>PhonePe</p>
+                    </div>
+                    <div class="upi-app" data-app="paytm">
+                        <img src="https://logo.clearbit.com/paytm.com" alt="Paytm">
+                        <p>Paytm</p>
+                    </div>
+                    <div class="upi-app" data-app="bhim">
+                        <img src="https://logo.clearbit.com/bhimupi.com" alt="BHIM">
+                        <p>BHIM</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="qr-tab">
+                <div class="qr-container">
+                    <h3>Scan QR Code to Pay</h3>
+                    <p>Use any UPI app to scan this QR code</p>
+                    <div id="qrcode"></div>
+                    <p style="margin-top: 15px;">Or share this QR with the payer</p>
+                </div>
+                
+                <div class="payment-info">
+                    <div class="info-item">
+                        <span>UPI ID:</span>
+                        <strong>8651744312bob@ybl</strong>
+                    </div>
+                    <div class="info-item">
+                        <span>Amount:</span>
+                        <strong>₹<span id="qr-amount">1000</span>.00</strong>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="qr-amount-input">Change Amount (₹)</label>
+                    <input type="number" id="qr-amount-input" value="1000" min="1">
+                </div>
+                
+                <button class="btn btn-accent" id="update-qr">
+                    <i class="fas fa-sync-alt"></i> Update QR Code
+                </button>
+            </div>
+            
+            <div class="tab-content" id="card-tab">
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" placeholder="John Doe">
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123">
+                    </div>
+                </div>
+                
+                <button class="btn">Pay ₹1000</button>
             </div>
         </div>
         
-        <div class="payment-summary">
-            <h3 style="margin-bottom: 15px;">Payment Details</h3>
-            <div class="summary-item">
-                <span>Recipient </span>
-                <span>Techplus Academy</span>
-            </div>
-            <div class="summary-item">
-                <span>UPI ID</span>
-                <span>8651744312bob@ybl</span>
-            </div>
-            <div class="summary-item summary-total">
-                <span>Amount</span>
-                <span>₹<span id="summary-amount"></span>.00</span>
+        <div class="payment-card" id="success-screen" style="display: none;">
+            <div class="success-screen">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>Payment Successful!</h2>
+                <p style="margin: 20px 0;">Thank you for your payment to TechPlus Academy</p>
+                
+                <div class="payment-info" style="max-width: 400px; margin: 0 auto;">
+                    <div class="info-item">
+                        <span>Amount:</span>
+                        <strong>₹<span id="success-amount">1000</span>.00</strong>
+                    </div>
+                    <div class="info-item">
+                        <span>Transaction ID:</span>
+                        <strong>TPA<span id="txn-id">987654321</span></strong>
+                    </div>
+                    <div class="info-item">
+                        <span>Date:</span>
+                        <strong id="txn-date">May 8, 2023 14:30</strong>
+                    </div>
+                </div>
+                
+                <button class="btn" style="margin-top: 30px; max-width: 200px; margin-left: auto; margin-right: auto;">
+                    <i class="fas fa-download"></i> Download Receipt
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Default mobile number (partially masked)
-        const defaultMobile = '8651744312';
-        let currentMobile = defaultMobile;
-        let countdownInterval;
-        
-        // Display mobile number with masking
-        document.getElementById('mobile-number-display').textContent = `+91 ••••••${defaultMobile.slice(8)}`;
-        
-        // Change number button
-        document.getElementById('change-number-btn').addEventListener('click', function() {
-            document.getElementById('mobile-input-section').style.display = 'block';
-            document.getElementById('payment-request-section').style.display = 'none';
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                
+                // Generate QR code when QR tab is selected
+                if (tabId === 'qr') {
+                    generateQRCode();
+                }
+            });
         });
         
-        // Confirm number button
-        document.getElementById('confirm-number-btn').addEventListener('click', function() {
-            const newNumber = document.getElementById('mobile-number').value;
-            
-            if (newNumber.length !== 10 || !/^\d+$/.test(newNumber)) {
-                alert('Please enter a valid 10-digit mobile number');
-                return;
-            }
-            
-            currentMobile = newNumber;
-            document.getElementById('mobile-number-display').textContent = `+91 ••••••${currentMobile.slice(6)}`;
-            document.getElementById('mobile-input-section').style.display = 'none';
-            document.getElementById('payment-request-section').style.display = 'block';
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                if (event.target.tagName === 'INPUT') return;
+                
+                document.querySelectorAll('.payment-method').forEach(m => {
+                    m.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                const input = this.querySelector('input');
+                if (input) {
+                    input.checked = true;
+                }
+            });
         });
         
-        // UPI app selection
+        // UPI App selection
         document.querySelectorAll('.upi-app').forEach(app => {
             app.addEventListener('click', function() {
                 const appName = this.getAttribute('data-app');
-                alert(`Opening ${appName} to complete payment to ${currentMobile}`);
-                // In real implementation, use UPI deep links
-                // window.location.href = `upi://pay?pa=${currentMobile}@upi&pn=Recipient&am=${amount}`;
+                const amount = document.getElementById('amount').value;
+                const note = document.getElementById('note').value || 'TechPlus Academy Payment';
+                
+                let upiLink = '';
+                
+                if (document.getElementById('upi-id').checked) {
+                    upiLink = `upi://pay?pa=8651744312bob@ybl&pn=TechPlus Academy&am=${amount}&tn=${encodeURIComponent(note)}`;
+                } else {
+                    upiLink = `upi://pay?pa=8651744312@upi&pn=TechPlus Academy&am=${amount}&tn=${encodeURIComponent(note)}`;
+                }
+                
+                // For demo purposes - in real implementation this would open the app
+                alert(`In a real implementation, this would open ${appName} with payment link:\n\n${upiLink}`);
+                
+                // Simulate successful payment after 3 seconds
+                setTimeout(() => {
+                    showSuccess(amount);
+                }, 3000);
             });
         });
         
-        // Send payment request
-        document.getElementById('send-request-btn').addEventListener('click', function() {
+        // Pay via UPI button
+        document.getElementById('pay-via-upi').addEventListener('click', function() {
             const amount = document.getElementById('amount').value;
-            const description = document.getElementById('description').value || 'Payment request';
+            const note = document.getElementById('note').value || 'TechPlus Academy Payment';
             
-            if (!amount || amount <= 0) {
-                alert('Please enter a valid amount');
-                return;
+            let upiLink = '';
+            
+            if (document.getElementById('upi-id').checked) {
+                upiLink = `upi://pay?pa=8651744312bob@ybl&pn=TechPlus Academy&am=${amount}&tn=${encodeURIComponent(note)}`;
+            } else {
+                upiLink = `upi://pay?pa=8651744312@upi&pn=TechPlus Academy&am=${amount}&tn=${encodeURIComponent(note)}`;
             }
             
-            // Update summary
-            document.getElementById('summary-amount').textContent = amount;
+            alert(`In a real implementation, this would open default UPI app with payment link:\n\n${upiLink}`);
             
-            // Show verification section
-            document.getElementById('payment-request-section').style.display = 'none';
-            document.getElementById('verification-section').style.display = 'block';
-            
-            // Start countdown
-            startCountdown();
-            
-            // Simulate sending request (in real app, this would call your backend)
-            console.log(`Sending UPI payment request of ₹${amount} to ${currentMobile}`);
+            // Simulate successful payment after 3 seconds
+            setTimeout(() => {
+                showSuccess(amount);
+            }, 3000);
         });
         
-        // Verification code input handling
-        const codeInputs = document.querySelectorAll('.verification-code input');
-        codeInputs.forEach((input, index) => {
-            input.addEventListener('input', function() {
-                if (this.value.length === 1) {
-                    if (index < codeInputs.length - 1) {
-                        codeInputs[index + 1].focus();
-                    }
-                }
+        // Generate QR Code
+        function generateQRCode() {
+            const amount = document.getElementById('qr-amount-input').value;
+            document.getElementById('qr-amount').textContent = amount;
+            
+            const upiString = `upi://pay?pa=8651744312bob@ybl&pn=TechPlus Academy&am=${amount}&tn=Course Fee Payment`;
+            
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generate new QR code
+            new QRCode(document.getElementById('qrcode"), {
+                text: upiString,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
             
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && this.value.length === 0) {
-                    if (index > 0) {
-                        codeInputs[index - 1].focus();
-                    }
+            // For demo - simulate payment when QR is shown
+            setTimeout(() => {
+                // Only show success if still on QR tab
+                if (document.querySelector('.tab[data-tab="qr"]').classList.contains('active')) {
+                    showSuccess(amount);
                 }
-            });
-        });
-        
-        // Verify payment button
-        document.getElementById('verify-payment-btn').addEventListener('click', function() {
-            let code = '';
-            codeInputs.forEach(input => {
-                code += input.value;
-            });
-            
-            if (code.length !== 6) {
-                alert('Please enter the complete 6-digit verification code');
-                return;
-            }
-            
-            // In real implementation, verify with backend
-            verifyPayment(code);
-        });
-        
-        // Resend code button
-        document.getElementById('resend-code-btn').addEventListener('click', function() {
-            startCountdown();
-            alert('New verification code sent to your mobile number');
-        });
-        
-        // Done button
-        document.getElementById('done-btn').addEventListener('click', function() {
-            alert('Payment flow completed');
-            // In real implementation, redirect or close modal
-        });
-        
-        // Countdown timer
-        function startCountdown() {
-            clearInterval(countdownInterval);
-            let timeLeft = 60;
-            
-            document.getElementById('countdown').style.display = 'block';
-            document.getElementById('resend-code-btn').style.display = 'none';
-            
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                document.getElementById('countdown').textContent = `Resend code in ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    document.getElementById('countdown').style.display = 'none';
-                    document.getElementById('resend-code-btn').style.display = 'block';
-                }
-            }, 1000);
+            }, 4000);
         }
         
-        // Simulate payment verification
-        function verifyPayment(code) {
-            // Show loading state
-            const verifyBtn = document.getElementById('verify-payment-btn');
-            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-            verifyBtn.disabled = true;
+        // Update QR code when amount changes
+        document.getElementById('update-qr').addEventListener('click', generateQRCode);
+        
+        // Show success screen
+        function showSuccess(amount) {
+            document.querySelector('.payment-card').style.display = 'none';
+            document.getElementById('success-screen').style.display = 'block';
             
-            // Simulate API call
-            setTimeout(() => {
-                // Show success
-                document.getElementById('verification-section').style.display = 'none';
-                document.getElementById('success-section').style.display = 'block';
-                
-                // Update success details
-                const amount = document.getElementById('amount').value;
-                document.getElementById('success-amount').textContent = amount;
-                document.getElementById('success-mobile').textContent = currentMobile;
-                document.getElementById('transaction-id').textContent = 'UPI' + Math.floor(Math.random() * 1000000000);
-                
-                // Reset verify button
-                verifyBtn.innerHTML = 'Verify Payment';
-                verifyBtn.disabled = false;
-            }, 2000);
+            // Set success details
+            document.getElementById('success-amount').textContent = amount;
+            document.getElementById('txn-id').textContent = Math.floor(Math.random() * 1000000000);
+            
+            // Set current date/time
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('txn-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Initialize QR code when page loads if on QR tab
+        if (document.querySelector('.tab[data-tab="qr"]').classList.contains('active')) {
+            generateQRCode();
         }
     </script>
 </body>
