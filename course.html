@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Computer Courses | Tech Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo i {
+            margin-right: 15px;
+            color: var(--accent);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .courses-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--secondary);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .course-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .course-card:hover .course-image img {
+            transform: scale(1.05);
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+        }
+        
+        .course-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .course-duration, .course-level {
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-duration i, .course-level i {
+            margin-right: 5px;
+            color: var(--secondary);
+        }
+        
+        .course-description {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .course-features {
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-features h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .features-list {
+            list-style-type: none;
+        }
+        
+        .features-list li {
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--success);
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .course-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .enroll-button {
+            display: block;
+            text-align: center;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.7rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .enroll-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .testimonials {
+            padding: 4rem 0;
+            background-color: var(--light);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '\f10d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 3rem;
+            color: rgba(52, 152, 219, 0.1);
+            z-index: 0;
+        }
+        
+        .testimonial-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h5 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .faq-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-header {
+            background-color: var(--light);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            transition: background-color 0.3s ease;
+        }
+        
+        .accordion-header:hover {
+            background-color: #e0e6ea;
+        }
+        
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .accordion-content.active {
+            padding: 1rem 1.5rem;
+            max-height: 500px;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style-type: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Tech Academy</span>
+                </div>
+                <p class="tagline">Master the digital world with our cutting-edge computer courses</p>
+                <div class="nav-links">
+                    <a href="#courses">Courses</a>
+                    <a href="#about">About</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Advanced Computer Courses for the Digital Age</h1>
+            <p>Transform your career with our industry-leading computer courses designed by experts. Gain hands-on experience with the latest technologies and tools.</p>
+            <a href="#courses" class="cta-button">Explore Courses</a>
+        </div>
+    </section>
+
+    <section id="courses" class="courses-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Featured Courses</h2>
+            </div>
+            <div class="courses-grid">
+                <!-- Course 1 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Full Stack Web Development">
+                    </div>
+                    <div class="course-content">
+                        <h3>Full Stack Web Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 6 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Advanced</span>
+                        </div>
+                        <p class="course-description">Master both front-end and back-end technologies to build complete web applications from scratch.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>HTML5, CSS3, JavaScript (ES6+)</li>
+                                <li>React.js and Node.js frameworks</li>
+                                <li>Database design with MongoDB & SQL</li>
+                                <li>RESTful API development</li>
+                                <li>Authentication & Deployment</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$499 <span class="original-price">$799</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1617791160536-598cf32026fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1364&q=80" alt="Data Science & Machine Learning">
+                    </div>
+                    <div class="course-content">
+                        <h3>Data Science & Machine Learning</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 8 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Advanced</span>
+                        </div>
+                        <p class="course-description">Unlock the power of data with Python, statistical analysis, and machine learning algorithms.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>Python for Data Science (NumPy, Pandas)</li>
+                                <li>Data visualization with Matplotlib & Seaborn</li>
+                                <li>Machine Learning algorithms</li>
+                                <li>Deep Learning with TensorFlow</li>
+                                <li>Big Data processing</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$599 <span class="original-price">$999</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Cybersecurity Professional">
+                    </div>
+                    <div class="course-content">
+                        <h3>Cybersecurity Professional</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 5 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Advanced</span>
+                        </div>
+                        <p class="course-description">Become a cybersecurity expert and protect systems from digital attacks and vulnerabilities.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>Network security fundamentals</li>
+                                <li>Ethical hacking techniques</li>
+                                <li>Cryptography & encryption</li>
+                                <li>Penetration testing</li>
+                                <li>Security compliance & laws</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$549 <span class="original-price">$899</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+                
+                <!-- Course 4 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cloud Computing with AWS">
+                    </div>
+                    <div class="course-content">
+                        <h3>Cloud Computing with AWS</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 4 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Intermediate</span>
+                        </div>
+                        <p class="course-description">Master Amazon Web Services and deploy scalable, reliable applications in the cloud.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>AWS core services (EC2, S3, RDS)</li>
+                                <li>Serverless computing with Lambda</li>
+                                <li>Cloud security & IAM</li>
+                                <li>Auto-scaling & load balancing</li>
+                                <li>DevOps with AWS</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$449 <span class="original-price">$749</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+                
+                <!-- Course 5 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Mobile App Development">
+                    </div>
+                    <div class="course-content">
+                        <h3>Mobile App Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 5 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Advanced</span>
+                        </div>
+                        <p class="course-description">Build cross-platform mobile applications using React Native and Flutter frameworks.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>React Native fundamentals</li>
+                                <li>Flutter development</li>
+                                <li>Mobile UI/UX principles</li>
+                                <li>API integration</li>
+                                <li>App deployment to stores</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$499 <span class="original-price">$799</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+                
+                <!-- Course 6 -->
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="https://images.unsplash.com/photo-1629904853893-c2c8981a1dc5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Blockchain Development">
+                    </div>
+                    <div class="course-content">
+                        <h3>Blockchain Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration"><i class="far fa-clock"></i> 6 Months</span>
+                            <span class="course-level"><i class="fas fa-signal"></i> Expert</span>
+                        </div>
+                        <p class="course-description">Learn to build decentralized applications (DApps) and smart contracts on Ethereum blockchain.</p>
+                        <div class="course-features">
+                            <h4>What You'll Learn:</h4>
+                            <ul class="features-list">
+                                <li>Blockchain fundamentals</li>
+                                <li>Solidity programming</li>
+                                <li>Smart contract development</li>
+                                <li>Web3.js and Truffle suite</li>
+                                <li>DeFi applications</li>
+                            </ul>
+                        </div>
+                        <div class="course-price">$649 <span class="original-price">$1099</span></div>
+                        <a href="#" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Students Say</h2>
+            </div>
+            <div class="testimonials-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"The Full Stack Web Development course transformed my career. Within 3 months of completing the course, I landed a job as a junior developer at a tech startup."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah Johnson">
+                            </div>
+                            <div class="author-info">
+                                <h5>Sarah Johnson</h5>
+                                <p>Web Developer at TechStart</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"As a complete beginner to programming, I was nervous, but the instructors made complex concepts easy to understand. The hands-on projects were incredibly valuable."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Chen">
+                            </div>
+                            <div class="author-info">
+                                <h5>Michael Chen</h5>
+                                <p>Data Analyst at DataCorp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"The Cybersecurity course gave me practical skills I use every day in my job. The labs simulating real-world attacks were particularly helpful for my current role."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya Patel">
+                            </div>
+                            <div class="author-info">
+                                <h5>Priya Patel</h5>
+                                <p>Security Engineer at SecureNet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div class="accordion">
+                <!-- FAQ Item 1 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Do I need any prior experience to enroll?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Most of our beginner and intermediate courses require no prior experience, though basic computer literacy is recommended. Our advanced courses may have prerequisites which are clearly listed in the course description.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>What's the time commitment for these courses?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Course durations vary from 3-8 months depending on the program. Most students spend 10-15 hours per week on coursework, including live sessions, self-study, and projects.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Are the courses conducted online or in-person?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>All our courses are available online with live instructor-led sessions. We also have hybrid options at select locations. Recordings of all sessions are available for review.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>What kind of certification will I receive?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Upon successful completion, you'll receive a verified certificate from Tech Academy. Many of our courses also prepare you for industry-recognized certifications like AWS, Cisco, or CompTIA.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Do you offer job placement assistance?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Yes! We have a dedicated career services team that offers resume reviews, interview preparation, and connects students with our network of hiring partners. Many courses include a capstone project for your portfolio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Tech Academy</h3>
+                    <p>Empowering the next generation of tech professionals through industry-relevant education and hands-on training.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#courses">All Courses</a></li>
+                        <li><a href="#">Become an Instructor</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley, CA</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@techacademy.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Tech Academy. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent);"></i> for future tech leaders</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('active');
+                const content = header.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
